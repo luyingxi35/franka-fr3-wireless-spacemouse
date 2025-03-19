@@ -1,0 +1,9 @@
+<library path="franka_single_arm_controllers">
+    <class name="franka_single_arm_controllers/CartesianVelocityController"
+        type="franka_single_arm_controllers::CartesianVelocityController"
+        base_class_type="controller_interface::ControllerInterface">
+        <description>
+            The CartesianVelocityController single arm controller for cartesian velocity control.
+        </description>
+    </class>
+</library>

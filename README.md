@@ -1,0 +1,51 @@
+# Franka Single Arm Controllers and SpaceMouse Publisher
+
+This repository contains ROS 2 packages for controlling a Franka robot arm using a 3Dconnexion SpaceMouse. It includes a `franka_single_arm_controllers` package for Cartesian velocity control and a `spacemouse_publisher` package for publishing SpaceMouse input as ROS 2 messages.
+
+## Packages
+
+### 1. `franka_single_arm_controllers`
+This package provides a Cartesian velocity controller for a single Franka arm. It subscribes to a target cartesian velocity input and sends velocity commands to the robot.
+
+#### Key Features:
+- Implements a `CartesianVelocityController` for controlling the robot's Cartesian velocity.
+- Subscribes to `/franka_controller/target_cartesian_velocity` topic for target cartesian velocity input.
+- Configurable parameters for velocity limits and collision behavior.
+
+#### Launch Files:
+- **`franka.launch.py`**: Launches the Franka robot with the controller.
+- **`cartesian_velocity_controller.launch.py`**: Launches the Cartesian velocity controller.
+
+### 2. `spacemouse_publisher`
+This package provides a ROS 2 node that reads input from a 3Dconnexion SpaceMouse and publishes it as `geometry_msgs/Twist` messages.
+
+#### Key Features:
+- Publishes SpaceMouse input to the `/franka_controller/target_cartesian_velocity` topic.
+- Uses the `pyspacemouse` library for device communication.
+
+#### Entry Point:
+- **`pyspacemouse_publisher.py`**: Main script for publishing SpaceMouse input.
+
+## Getting Started
+
+To get started with the SpaceMouse publisher and Cartesian velocity controller:
+
+1. **Run the SpaceMouse Publisher**  
+   Start the SpaceMouse publisher node to read input from the SpaceMouse and publish it as ROS 2 messages:  
+   ```bash
+   ros2 run spacemouse_publisher pyspacemouse_publisher
+   ```
+
+2. **Launch the Cartesian Velocity Controller**  
+   Launch the controller to send velocity commands to the Franka robot:  
+   ```bash
+   ros2 launch franka_single_arm_controllers cartesian_velocity_controller.launch.py robot_ip:=<robot-ip>
+   ```
+
+   Replace `<robot-ip>` with the IP address of your Franka robot.
+
+## Known Issues & Troubleshooting
+
+- **SpaceMouse Not Detected in Dev Container**  
+  If the SpaceMouse publisher fails to detect the device while running in a development container, try restarting the container. 
+
