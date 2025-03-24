@@ -1,0 +1,12 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 1000  # Hz
+
+    cartesian_velocity_controller:
+      type: franka_single_arm_controllers/CartesianVelocityController  
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    franka_robot_state_broadcaster:
+      type: franka_robot_state_broadcaster/FrankaRobotStateBroadcaster
