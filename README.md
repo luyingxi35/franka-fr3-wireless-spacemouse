@@ -23,8 +23,8 @@ This package provides a ROS 2 node that reads input from a 3Dconnexion SpaceMous
 - Publishes SpaceMouse input to the `/franka_controller/target_cartesian_velocity` topic.
 - Uses the `pyspacemouse` library for device communication.
 
-#### Entry Point:
-- **`pyspacemouse_publisher.py`**: Main script for publishing SpaceMouse input.
+#### Launch Files:
+- **`spacemouse_publisher.launch.py`**: Launches the SpaceMouse publisher node.
 
 ### 3. `gripper_manager`
 This package provides a ROS 2 node for managing the gripper of the Franka robot. It allows sending commands to control the gripper's width and perform homing actions.
@@ -41,10 +41,16 @@ This package provides a ROS 2 node for managing the gripper of the Franka robot.
 To get started with the SpaceMouse publisher and Cartesian velocity controller:
 
 1. **Run the SpaceMouse Publisher**  
-   Start the SpaceMouse publisher node to read input from the SpaceMouse and publish it as ROS 2 messages:  
+   Launch the SpaceMouse publisher node to read input from the SpaceMouse and publish it as ROS 2 messages:  
    ```bash
-   ros2 run spacemouse_publisher pyspacemouse_publisher
+   ros2 launch spacemouse_publisher spacemouse_publisher.launch.py [operator_position_front:=<true_or_false>]
    ```
+
+   The `operator_position_front` parameter is **optional**. If not provided, it defaults to `True`.  
+   - Set `operator_position_front:=True` if the operator is sitting in front of the robot.  
+   - Set `operator_position_front:=False` if the operator is positioned elsewhere.
+   Hint: This aligns the coordinate system of the SpaceMouse to the end-effector. Rotating the SpaceMouse can fulfill the same functionality, if, for example, you are seated on the robot's right side. 
+
 
 2. **Launch the Cartesian Velocity Controller**  
    Launch the controller to send velocity commands to the Franka robot:  
