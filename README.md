@@ -26,6 +26,16 @@ This package provides a ROS 2 node that reads input from a 3Dconnexion SpaceMous
 #### Entry Point:
 - **`pyspacemouse_publisher.py`**: Main script for publishing SpaceMouse input.
 
+### 3. `gripper_manager`
+This package provides a ROS 2 node for managing the gripper of the Franka robot. It allows sending commands to control the gripper's width and perform homing actions.
+
+#### Key Features:
+- Subscribes to `/gripper_client/target_gripper_width_percent` for gripper width commands.
+- Supports homing and move actions for the gripper.
+
+#### Launch Files:
+- **`franka_gripper_client.launch.py`**: Launches the gripper manager node.
+
 ## Getting Started
 
 To get started with the SpaceMouse publisher and Cartesian velocity controller:
@@ -43,6 +53,12 @@ To get started with the SpaceMouse publisher and Cartesian velocity controller:
    ```
 
    Replace `<robot-ip>` with the IP address of your Franka robot.
+
+3. **Launch the Gripper Manager**
+   Start the gripper manager node to control the gripper:
+   ```bash
+   ros2 launch gripper_manager franka_gripper_client.launch.py 
+   ```
 
 ## Known Issues & Troubleshooting
 

@@ -1,6 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
+from std_msgs.msg import Float32
 import pyspacemouse
 
 
@@ -17,8 +18,12 @@ class SpaceMousePublisher(Node):
     def __init__(self):
         super().__init__('spacemouse_publisher')
         self.publisher_ = self.create_publisher(Twist, 'franka_controller/target_cartesian_velocity', 10)
+        self.gripper_command_publisher_ = self.create_publisher(Float32, '/gripper_client/target_gripper_width_percent', 10)
         self.timer = self.create_timer(0.01, self.timer_callback) 
-        self.success = pyspacemouse.open()
+        self.success = pyspacemouse.open(dof_callback=None, button_callback_arr=[
+            pyspacemouse.ButtonCallback([0], self.button_callback),  # Button 1
+            pyspacemouse.ButtonCallback([1], self.button_callback)   # Button 2
+        ])
 
     def timer_callback(self):
         if self.success:
@@ -32,12 +37,26 @@ class SpaceMousePublisher(Node):
             twist_msg.angular.z = float(state.yaw)
             self.publisher_.publish(twist_msg)
 
+    def button_callback(self, state, buttons, pressed_buttons):
+        target_gripper_width_percent_msg = Float32()
+        if 0 in pressed_buttons:
+            print("Button 0 pressed")
+            target_gripper_width_percent_msg.data = 0.0
+            
+        elif 1 in pressed_buttons:
+            print("Button 1 pressed")
+            target_gripper_width_percent_msg.data = 1.0
+            
+        self.gripper_command_publisher_.publish(target_gripper_width_percent_msg)
+
+
 def main(args=None):
     rclpy.init(args=args)
     spacemouse_publisher = SpaceMousePublisher()
     rclpy.spin(spacemouse_publisher)
     spacemouse_publisher.destroy_node()
     rclpy.shutdown()
+
 
 if __name__ == '__main__':
     main()
