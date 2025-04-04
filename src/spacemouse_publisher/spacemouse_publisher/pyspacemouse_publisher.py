@@ -23,13 +23,16 @@ class SpaceMousePublisher(Node):
         self.operator_position_front = self.get_parameter('operator_position_front').get_parameter_value().bool_value
         self.get_logger().info(f"Operator position front: {self.operator_position_front}")
 
+        self.declare_parameter('device_path', '')
+        self.device_path = self.get_parameter('device_path').get_parameter_value().string_value
+
         self.publisher_ = self.create_publisher(Twist, 'franka_controller/target_cartesian_velocity', 10)
         self.gripper_command_publisher_ = self.create_publisher(Float32, '/gripper_client/target_gripper_width_percent', 10)
         self.timer = self.create_timer(0.01, self.timer_callback) 
         self.success = pyspacemouse.open(dof_callback=None, button_callback_arr=[
             pyspacemouse.ButtonCallback([0], self.button_callback),  # Button 1
             pyspacemouse.ButtonCallback([1], self.button_callback)   # Button 2
-        ])
+        ], path=self.device_path)
 
     def timer_callback(self):
         if not self.success:
