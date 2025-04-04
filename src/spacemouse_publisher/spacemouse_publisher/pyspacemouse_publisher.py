@@ -17,6 +17,12 @@ class SpaceMousePublisher(Node):
     
     def __init__(self):
         super().__init__('spacemouse_publisher')
+        self.get_logger().info("Initializing SpaceMouse publisher...")
+
+        self.declare_parameter('operator_position_front', True)
+        self.operator_position_front = self.get_parameter('operator_position_front').get_parameter_value().bool_value
+        self.get_logger().info(f"Operator position front: {self.operator_position_front}")
+
         self.publisher_ = self.create_publisher(Twist, 'franka_controller/target_cartesian_velocity', 10)
         self.gripper_command_publisher_ = self.create_publisher(Float32, '/gripper_client/target_gripper_width_percent', 10)
         self.timer = self.create_timer(0.01, self.timer_callback) 
@@ -26,16 +32,26 @@ class SpaceMousePublisher(Node):
         ])
 
     def timer_callback(self):
-        if self.success:
-            state = pyspacemouse.read()
-            twist_msg = Twist()
-            twist_msg.linear.x = float(state.x)
-            twist_msg.linear.y = float(state.y)
-            twist_msg.linear.z = float(state.z)
-            twist_msg.angular.x = float(state.roll)
-            twist_msg.angular.y = float(state.pitch)
-            twist_msg.angular.z = float(state.yaw)
-            self.publisher_.publish(twist_msg)
+        if not self.success:
+            return
+
+        state = pyspacemouse.read()
+        twist_msg = Twist()
+
+        twist_msg.linear.x = -float(state.y)
+        twist_msg.linear.y = float(state.x)
+        twist_msg.linear.z = float(state.z)
+        twist_msg.angular.x = -float(state.roll)
+        twist_msg.angular.y = -float(state.pitch)
+        twist_msg.angular.z = -float(state.yaw)
+
+        if not self.operator_position_front:
+            twist_msg.linear.x *= -1
+            twist_msg.linear.y *= -1
+            twist_msg.angular.x *= -1
+            twist_msg.angular.y *= -1
+
+        self.publisher_.publish(twist_msg)
 
     def button_callback(self, state, buttons, pressed_buttons):
         target_gripper_width_percent_msg = Float32()
