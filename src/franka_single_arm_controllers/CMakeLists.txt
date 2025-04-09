@@ -40,7 +40,7 @@ find_package(moveit_msgs REQUIRED)
 add_library(
         ${PROJECT_NAME}
         SHARED
-        src/cartesian_velocity_controller.cpp)
+        src/joint_impedance_ik_controller.cpp)
 target_include_directories(
         ${PROJECT_NAME}
         PUBLIC

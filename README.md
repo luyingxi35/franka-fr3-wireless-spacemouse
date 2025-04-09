@@ -1,26 +1,25 @@
 # Franka Single Arm Controllers and SpaceMouse Publisher
 
-This repository contains ROS 2 packages for controlling a Franka robot arm using a 3Dconnexion SpaceMouse. It includes a `franka_single_arm_controllers` package for Cartesian velocity control and a `spacemouse_publisher` package for publishing SpaceMouse input as ROS 2 messages.
+This repository contains ROS 2 packages for controlling a Franka robot arm using a 3Dconnexion SpaceMouse. It includes a `franka_single_arm_controllers` package for Joint Impedance control and a `spacemouse_publisher` package for publishing SpaceMouse input as ROS 2 messages.
 
 ## Packages
 
 ### 1. `franka_single_arm_controllers`
-This package provides a Cartesian velocity controller for a single Franka arm. It subscribes to a target cartesian velocity input and sends velocity commands to the robot.
+This package provides a Joint Impedance controller for a single Franka arm. It subscribes to a target cartesian velocity input and sends torque commands to the robot.
 
 #### Key Features:
-- Implements a `CartesianVelocityController` for controlling the robot's Cartesian velocity.
-- Subscribes to `/franka_controller/target_cartesian_velocity` topic for target cartesian velocity input.
-- Configurable parameters for velocity limits and collision behavior.
+- Implements a `JointImpedanceController` for controlling the robot's torques.
+- Subscribes to `/franka_controller/target_cartesian_velocity_percent` topic for target cartesian velocity input.
 
 #### Launch Files:
 - **`franka.launch.py`**: Launches the Franka robot with the controller.
-- **`cartesian_velocity_controller.launch.py`**: Launches the Cartesian velocity controller.
+- **`joint_impedance_ik_controller.launch.py`**: Launches the Joint Impedance controller.
 
 ### 2. `spacemouse_publisher`
 This package provides a ROS 2 node that reads input from a 3Dconnexion SpaceMouse and publishes it as `geometry_msgs/Twist` messages.
 
 #### Key Features:
-- Publishes SpaceMouse input to the `/franka_controller/target_cartesian_velocity` topic.
+- Publishes SpaceMouse input to the `/franka_controller/target_cartesian_velocity_percent` topic.
 - Uses the `pyspacemouse` library for device communication.
 
 #### Launch Files:
@@ -38,7 +37,7 @@ This package provides a ROS 2 node for managing the gripper of the Franka robot.
 
 ## Getting Started
 
-To get started with the SpaceMouse publisher and Cartesian velocity controller:
+To get started with the SpaceMouse publisher and Joint Impedance controller:
 
 1. **Run the SpaceMouse Publisher**  
    Launch the SpaceMouse publisher node to read input from the SpaceMouse and publish it as ROS 2 messages:  
@@ -54,10 +53,10 @@ To get started with the SpaceMouse publisher and Cartesian velocity controller:
    The `device_path` parameter is **optional**. If not provided, it defaults to `''`, leading to automatic SpaceMouse detection. This parameter is only required, if multiple devices are connected and a specific one shall be used as input device. If not defined, the first one found will be used.
 
 
-2. **Launch the Cartesian Velocity Controller**  
-   Launch the controller to send velocity commands to the Franka robot:  
+2. **Launch the Joint Impedance Controller**  
+   Launch the controller to send torque commands to the Franka robot:  
    ```bash
-   ros2 launch franka_single_arm_controllers cartesian_velocity_controller.launch.py robot_ip:=<robot-ip>
+   ros2 launch franka_single_arm_controllers joint_impedance_ik_controller.launch.py robot_ip:=<robot-ip>
    ```
 
    Replace `<robot-ip>` with the IP address of your Franka robot.

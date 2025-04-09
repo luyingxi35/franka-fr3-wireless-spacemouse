@@ -3,14 +3,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: franka_spacemouse-devcontainer-limitrated
+    container_name: franka-spacemouse-devcontainer
     privileged: true
     restart: no
     tty: true
     volumes:
       - ../:/workspace
-      - /dev/serial/by-id:/dev/serial/by-id
+      - /dev:/dev
     environment:
       # Due to performance issues in cppcheck 2.7, cppcheck will be skipped unless this variable is set.
       AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS: true 
     network_mode: host
+    group_add:
+      - plugdev

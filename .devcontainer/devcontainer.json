@@ -1,6 +1,5 @@
 {
   "name": "franka_spacemouse-devcontainer",
-  "remoteUser": "root",
   "dockerComposeFile": "docker-compose.yml",
   "service": "franka_spacemouse-devcontainer",
   "customizations": {

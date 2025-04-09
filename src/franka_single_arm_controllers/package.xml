@@ -3,7 +3,7 @@
 <package format="3">
   <name>franka_single_arm_controllers</name>
   <version>0.0.1</version>
-  <description>Single arm controller for cartesian velocity control</description>
+  <description>Single arm controller for joint impedance control</description>
   <maintainer email="support@franka.de">Franka Robotics GmbH</maintainer>
   <license>Apache 2.0</license>
 
