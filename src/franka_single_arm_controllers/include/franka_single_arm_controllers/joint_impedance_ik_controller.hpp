@@ -93,15 +93,10 @@ class JointImpedanceIKController : public controller_interface::ControllerInterf
   rclcpp::Client<moveit_msgs::srv::GetPositionIK>::SharedPtr compute_ik_client_;
 
   const bool k_elbow_activated_{false};
-  bool initialization_flag_{true};
 
   std::string arm_id_;
   bool is_gripper_loaded_ = true;
   std::string robot_description_;
-
-  double elapsed_time_{0.0};
-  double initial_robot_time_{0.0};
-  double robot_time_{0.0};
   std::unique_ptr<franka_semantic_components::FrankaRobotModel> franka_robot_model_;
 
   const std::string k_robot_state_interface_name{"robot_state"};

@@ -118,17 +118,6 @@ Vector7d JointImpedanceIKController::compute_torque_command(
 controller_interface::return_type JointImpedanceIKController::update(
     const rclcpp::Time& /*time*/,
     const rclcpp::Duration& /*period*/) {
-  if (initialization_flag_) {
-    std::tie(orientation_, position_) =
-        franka_cartesian_pose_->getCurrentOrientationAndTranslation();
-
-    initial_robot_time_ = state_interfaces_.back().get_value();
-    elapsed_time_ = 0.0;
-    initialization_flag_ = false;
-  } else {
-    robot_time_ = state_interfaces_.back().get_value();
-    elapsed_time_ = robot_time_ - initial_robot_time_;
-  }
   update_joint_states();
   std::tie(orientation_, position_) = franka_cartesian_pose_->getCurrentOrientationAndTranslation();
 
@@ -269,8 +258,6 @@ CallbackReturn JointImpedanceIKController::on_configure(
 
 CallbackReturn JointImpedanceIKController::on_activate(
     const rclcpp_lifecycle::State& /*previous_state*/) {
-  initialization_flag_ = true;
-  elapsed_time_ = 0.0;
   dq_filtered_.setZero();
   joint_positions_desired_.reserve(num_joints_);
   joint_positions_current_.reserve(num_joints_);
@@ -291,6 +278,10 @@ controller_interface::CallbackReturn JointImpedanceIKController::on_deactivate(
 
 void JointImpedanceIKController::spacemouse_callback(
     const geometry_msgs::msg::Twist::SharedPtr msg) {
+  // The values for max_linear_pos_update and max_angular_pos_update are empirically determined.
+  // These values represent a tradeoff between precision in teleop control and speed.
+  // Lowering these values will make the robot move slower and more precise, while increasing them
+  // will make it move faster but less precise.
   const double max_linear_pos_update = 0.007;
   const double max_angular_pos_update = 0.03;
   desired_linear_position_update_ =
