@@ -35,6 +35,26 @@ This package provides a ROS 2 node for managing the gripper of the Franka robot.
 #### Launch Files:
 - **`franka_gripper_client.launch.py`**: Launches the gripper manager node.
 
+## Build and Test
+
+### Building the Project
+
+To build the project, use the following `colcon` command with CMake arguments, required for clang-tidy:
+
+```bash
+colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCHECK_TIDY=ON
+```
+
+### Testing of FrankaSingleArmControllers
+
+The FrankaSingleArmControllers package comes with a set of tests, which can be executed using the following command:
+
+```bash
+AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=true colcon test --packages-select franka_single_arm_controllers
+```
+
+Due to performance issues in cpp-check 2.7, the environment variable AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS must be set to prevent the tests from being skipped.
+
 ## Getting Started
 
 To get started with the SpaceMouse publisher and Joint Impedance controller:

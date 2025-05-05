@@ -131,9 +131,9 @@ controller_interface::return_type JointImpedanceIKController::update(
   }
   update_joint_states();
   std::tie(orientation_, position_) = franka_cartesian_pose_->getCurrentOrientationAndTranslation();
-  
-  auto new_position = position_+desired_linear_position_update_;
-  auto new_orientation = orientation_*desired_angular_position_update_quaternion_;
+
+  auto new_position = position_ + desired_linear_position_update_;
+  auto new_orientation = orientation_ * desired_angular_position_update_quaternion_;
   auto service_request =
       create_ik_service_request(new_position, new_orientation, joint_positions_current_,
                                 joint_velocities_current_, joint_efforts_current_);
@@ -258,9 +258,11 @@ CallbackReturn JointImpedanceIKController::on_configure(
   arm_id_ = robot_utils::getRobotNameFromDescription(robot_description_, get_node()->get_logger());
 
   spacemouse_sub_ = get_node()->create_subscription<geometry_msgs::msg::Twist>(
-    "franka_controller/target_cartesian_velocity_percent", 10, std::bind(&JointImpedanceIKController::spacemouse_callback, this, std::placeholders::_1));
+      "franka_controller/target_cartesian_velocity_percent", 10,
+      [this](const geometry_msgs::msg::Twist::SharedPtr msg) { this->spacemouse_callback(msg); });
 
-  RCLCPP_INFO(get_node()->get_logger(), "Subscribed to franka_controller/target_cartesian_velocity_percent.");
+  RCLCPP_INFO(get_node()->get_logger(),
+              "Subscribed to franka_controller/target_cartesian_velocity_percent.");
 
   return CallbackReturn::SUCCESS;
 }
@@ -287,12 +289,15 @@ controller_interface::CallbackReturn JointImpedanceIKController::on_deactivate(
   return CallbackReturn::SUCCESS;
 }
 
-void JointImpedanceIKController::spacemouse_callback(const geometry_msgs::msg::Twist::SharedPtr msg) {
+void JointImpedanceIKController::spacemouse_callback(
+    const geometry_msgs::msg::Twist::SharedPtr msg) {
   const double max_linear_pos_update = 0.007;
-  const double max_angular_pos_update = 0.03; 
-  desired_linear_position_update_ = max_linear_pos_update * Eigen::Vector3d(msg->linear.x, msg->linear.y, msg->linear.z);
-  desired_angular_position_update_ = max_angular_pos_update * Eigen::Vector3d(msg->angular.x, msg->angular.y, msg->angular.z);
-  Eigen::AngleAxisd  rollAngle(desired_angular_position_update_.x(), Eigen::Vector3d::UnitX());
+  const double max_angular_pos_update = 0.03;
+  desired_linear_position_update_ =
+      max_linear_pos_update * Eigen::Vector3d(msg->linear.x, msg->linear.y, msg->linear.z);
+  desired_angular_position_update_ =
+      max_angular_pos_update * Eigen::Vector3d(msg->angular.x, msg->angular.y, msg->angular.z);
+  Eigen::AngleAxisd rollAngle(desired_angular_position_update_.x(), Eigen::Vector3d::UnitX());
   Eigen::AngleAxisd pitchAngle(desired_angular_position_update_.y(), Eigen::Vector3d::UnitY());
   Eigen::AngleAxisd yawAngle(desired_angular_position_update_.z(), Eigen::Vector3d::UnitZ());
   desired_angular_position_update_quaternion_ = yawAngle * pitchAngle * rollAngle;
