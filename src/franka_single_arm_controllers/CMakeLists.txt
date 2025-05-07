@@ -40,7 +40,7 @@ find_package(moveit_msgs REQUIRED)
 add_library(
         ${PROJECT_NAME}
         SHARED
-        src/cartesian_velocity_controller.cpp)
+        src/joint_impedance_ik_controller.cpp)
 target_include_directories(
         ${PROJECT_NAME}
         PUBLIC
@@ -94,5 +94,30 @@ ament_export_dependencies(
         hardware_interface
         moveit_core
 )
+
+if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+  find_package(ament_cmake_clang_format REQUIRED)
+  find_package(ament_cmake_copyright REQUIRED)
+  find_package(ament_cmake_cppcheck REQUIRED)
+  find_package(ament_cmake_lint_cmake REQUIRED)
+  find_package(ament_cmake_xmllint REQUIRED)
+
+  set(CPP_DIRECTORIES src include test)
+
+  ament_cppcheck(${CPP_DIRECTORIES})
+  ament_lint_cmake(CMakeLists.txt)
+  ament_xmllint()
+  ament_clang_format(CONFIG_FILE /workspace/.clang-format ${CPP_DIRECTORIES})
+  ament_copyright(${CPP_DIRECTORIES} package.xml)
+endif()
+
+if(CHECK_TIDY)
+  find_package(ament_cmake_clang_tidy REQUIRED)
+
+  set(ament_cmake_clang_tidy_CONFIG_FILE /workspace/.clang-tidy)
+
+  ament_clang_tidy(${CMAKE_BINARY_DIR})
+endif()
 
 ament_package()

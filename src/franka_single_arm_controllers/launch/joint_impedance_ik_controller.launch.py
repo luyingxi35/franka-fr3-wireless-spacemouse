@@ -75,11 +75,30 @@ def generate_launch_description():
                               use_rviz_parameter_name: use_rviz
                               }.items(),
         ),
-
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                [
+                    PathJoinSubstitution(
+                        [
+                            FindPackageShare('franka_fr3_moveit_config'),
+                            'launch',
+                            'move_group.launch.py',
+                        ]
+                    )
+                ]
+            ),
+            launch_arguments={
+                robot_ip: robot_ip,
+                load_gripper_parameter_name: load_gripper,
+                use_fake_hardware_parameter_name: 'true',
+                fake_sensor_commands_parameter_name: fake_sensor_commands,
+                use_rviz_parameter_name: use_rviz,
+            }.items(),
+        ),
         Node(
             package='controller_manager',
             executable='spawner',
-            arguments=['cartesian_velocity_controller'],
+            arguments=['joint_impedance_ik_controller'],
             output='screen',
         ),
     ])

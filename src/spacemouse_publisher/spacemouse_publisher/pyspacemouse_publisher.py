@@ -20,22 +20,22 @@ class SpaceMousePublisher(Node):
         self.get_logger().info("Initializing SpaceMouse publisher...")
 
         self.declare_parameter('operator_position_front', True)
-        self.operator_position_front = self.get_parameter('operator_position_front').get_parameter_value().bool_value
-        self.get_logger().info(f"Operator position front: {self.operator_position_front}")
+        self._operator_position_front = self.get_parameter('operator_position_front').get_parameter_value().bool_value
+        self.get_logger().info(f"Operator position front: {self._operator_position_front}")
 
         self.declare_parameter('device_path', '')
-        self.device_path = self.get_parameter('device_path').get_parameter_value().string_value
+        self._device_path = self.get_parameter('device_path').get_parameter_value().string_value
 
-        self.publisher_ = self.create_publisher(Twist, 'franka_controller/target_cartesian_velocity', 10)
-        self.gripper_command_publisher_ = self.create_publisher(Float32, '/gripper_client/target_gripper_width_percent', 10)
-        self.timer = self.create_timer(0.01, self.timer_callback) 
-        self.success = pyspacemouse.open(dof_callback=None, button_callback_arr=[
-            pyspacemouse.ButtonCallback([0], self.button_callback),  # Button 1
-            pyspacemouse.ButtonCallback([1], self.button_callback)   # Button 2
-        ], path=self.device_path)
+        self._twist_publisher = self.create_publisher(Twist, '/franka_controller/target_cartesian_velocity_percent', 10)
+        self._gripper_width_publisher = self.create_publisher(Float32, '/gripper_client/target_gripper_width_percent', 10)
+        self._timer = self.create_timer(0.01, self._timer_callback) 
+        self._device_open_success = pyspacemouse.open(dof_callback=None, button_callback_arr=[
+            pyspacemouse.ButtonCallback([0], self._button_callback),  # Button 1
+            pyspacemouse.ButtonCallback([1], self._button_callback)   # Button 2
+        ], path=self._device_path)
 
-    def timer_callback(self):
-        if not self.success:
+    def _timer_callback(self):
+        if not self._device_open_success:
             return
 
         state = pyspacemouse.read()
@@ -48,15 +48,15 @@ class SpaceMousePublisher(Node):
         twist_msg.angular.y = -float(state.pitch)
         twist_msg.angular.z = -float(state.yaw)
 
-        if not self.operator_position_front:
+        if not self._operator_position_front:
             twist_msg.linear.x *= -1
             twist_msg.linear.y *= -1
             twist_msg.angular.x *= -1
             twist_msg.angular.y *= -1
 
-        self.publisher_.publish(twist_msg)
+        self._twist_publisher.publish(twist_msg)
 
-    def button_callback(self, state, buttons, pressed_buttons):
+    def _button_callback(self, state, buttons, pressed_buttons):
         target_gripper_width_percent_msg = Float32()
         if 0 in pressed_buttons:
             print("Button 0 pressed")
@@ -66,7 +66,7 @@ class SpaceMousePublisher(Node):
             print("Button 1 pressed")
             target_gripper_width_percent_msg.data = 1.0
             
-        self.gripper_command_publisher_.publish(target_gripper_width_percent_msg)
+        self._gripper_width_publisher.publish(target_gripper_width_percent_msg)
 
 
 def main(args=None):

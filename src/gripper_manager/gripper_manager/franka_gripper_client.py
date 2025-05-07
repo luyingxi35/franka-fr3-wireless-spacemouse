@@ -32,8 +32,8 @@ class GripperClient(Node):
     homing_action_topic = self.get_parameter('homing_action_topic').get_parameter_value().string_value
     gripper_command_topic = self.get_parameter('gripper_command_topic').get_parameter_value().string_value
     joint_states_topic = self.get_parameter('joint_states_topic').get_parameter_value().string_value
-    self.gripper_epsilon_inner = self.get_parameter('gripper_epsilon_inner').get_parameter_value().double_value
-    self.gripper_epsilon_outer = self.get_parameter('gripper_epsilon_outer').get_parameter_value().double_value
+    self._gripper_epsilon_inner = self.get_parameter('gripper_epsilon_inner').get_parameter_value().double_value
+    self._gripper_epsilon_outer = self.get_parameter('gripper_epsilon_outer').get_parameter_value().double_value
     self.gripper_speed = self.get_parameter('gripper_speed').get_parameter_value().double_value
     self.gripper_force = self.get_parameter('gripper_force').get_parameter_value().double_value
 
@@ -118,8 +118,8 @@ class GripperClient(Node):
   def _send_gripper_command(self, gripper_position: float) -> None:
     goal_msg = Grasp.Goal()
     goal_msg.width = gripper_position
-    goal_msg.epsilon.inner = self.gripper_epsilon_inner
-    goal_msg.epsilon.outer = self.gripper_epsilon_outer
+    goal_msg.epsilon.inner = self._gripper_epsilon_inner
+    goal_msg.epsilon.outer = self._gripper_epsilon_outer
     goal_msg.speed = self.gripper_speed
     goal_msg.force = self.gripper_force
     self._future = self._action_client.send_goal_async(goal_msg)

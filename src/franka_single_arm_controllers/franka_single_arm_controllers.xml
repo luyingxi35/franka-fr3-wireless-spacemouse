@@ -1,9 +1,9 @@
 <library path="franka_single_arm_controllers">
-    <class name="franka_single_arm_controllers/CartesianVelocityController"
-        type="franka_single_arm_controllers::CartesianVelocityController"
+    <class name="franka_single_arm_controllers/JointImpedanceIKController"
+        type="franka_single_arm_controllers::JointImpedanceIKController"
         base_class_type="controller_interface::ControllerInterface">
         <description>
-            The CartesianVelocityController single arm controller for cartesian velocity control.
+            The JointImpedanceIKController single arm controller for joint impedance control.
         </description>
     </class>
 </library>
