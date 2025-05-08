@@ -15,12 +15,8 @@
 #include <franka_single_arm_controllers/default_robot_behavior_utils.hpp>
 #include <franka_single_arm_controllers/joint_impedance_ik_controller.hpp>
 
-#include <cassert>
-#include <cmath>
-#include <exception>
-#include <string>
-
 #include <chrono>
+#include <string>
 
 using namespace std::chrono_literals;
 using Vector7d = Eigen::Matrix<double, 7, 1>;

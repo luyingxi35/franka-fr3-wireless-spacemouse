@@ -30,10 +30,7 @@ using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface
 namespace franka_single_arm_controllers {
 
 /**
- * joint impedance example controller get desired pose and use inverse kinematics LMA
- * (Levenberg-Marquardt) from Orocos KDL. IK returns the desired joint positions from the desired
- * pose. Desired joint positions are fed to the impedance control law together with the current
- * joint velocities to calculate the desired joint torques.
+ * joint impedance controller to move the robot to a desired pose.
  */
 class JointImpedanceIKController : public controller_interface::ControllerInterface {
  public:

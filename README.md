@@ -50,10 +50,8 @@ colcon build --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCHECK_TIDY=ON
 The FrankaSingleArmControllers package comes with a set of tests, which can be executed using the following command:
 
 ```bash
-AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=true colcon test --packages-select franka_single_arm_controllers
+colcon test --packages-select franka_single_arm_controllers
 ```
-
-Due to performance issues in cpp-check 2.7, the environment variable AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS must be set to prevent the tests from being skipped.
 
 ## Getting Started
 

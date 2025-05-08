@@ -1,4 +1,5 @@
 import rclpy
+import time
 from rclpy.node import Node
 from franka_msgs.action import Grasp
 from franka_msgs.action import Homing
@@ -79,6 +80,7 @@ class GripperClient(Node):
     result_future = goal_handle.get_result_async()
     rclpy.spin_until_future_complete(self, result_future)
     result = result_future.result()
+    time.sleep(2) # wait until everything is synchronized
 
     if result.result.success:
         self.get_logger().info("Gripper homing successful!")
