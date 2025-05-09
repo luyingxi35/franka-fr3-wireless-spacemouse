@@ -3,7 +3,7 @@
 <package format="3">
   <name>franka_single_arm_controllers</name>
   <version>0.0.1</version>
-  <description>Single arm controller for joint impedance control</description>
+  <description>Single arm controller for robot control</description>
   <maintainer email="support@franka.de">Franka Robotics GmbH</maintainer>
   <license>Apache 2.0</license>
 
@@ -18,7 +18,6 @@
   <depend>moveit_core</depend>
   <depend>moveit_msgs</depend>
 
-
   <test_depend>ament_cmake_clang_format</test_depend>
   <test_depend>ament_cmake_copyright</test_depend>
   <test_depend>ament_cmake_cppcheck</test_depend>
@@ -30,7 +29,6 @@
   <test_depend>ament_cmake_clang_tidy</test_depend>
   <test_depend>controller_manager</test_depend>
   <test_depend>ros2_control_test_assets</test_depend>
-
 
   <export>
     <build_type>ament_cmake</build_type>

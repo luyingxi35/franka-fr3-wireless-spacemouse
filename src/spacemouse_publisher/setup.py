@@ -16,7 +16,7 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='root',
+    maintainer='Franka Robotics GmbH',
     maintainer_email='support@franka.de',
     description='This package provides a node that publishes the data from a 3Dconnexion SpaceMouse.',
     license='Apache 2.0',

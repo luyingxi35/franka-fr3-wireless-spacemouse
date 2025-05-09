@@ -39,8 +39,8 @@ class SpaceMousePublisher(Node):
             return
 
         state = pyspacemouse.read()
+        
         twist_msg = Twist()
-
         twist_msg.linear.x = -float(state.y)
         twist_msg.linear.y = float(state.x)
         twist_msg.linear.z = float(state.z)
@@ -59,11 +59,11 @@ class SpaceMousePublisher(Node):
     def _button_callback(self, state, buttons, pressed_buttons):
         target_gripper_width_percent_msg = Float32()
         if 0 in pressed_buttons:
-            print("Button 0 pressed")
+            print("Button 1 pressed")
             target_gripper_width_percent_msg.data = 0.0
             
         elif 1 in pressed_buttons:
-            print("Button 1 pressed")
+            print("Button 2 pressed")
             target_gripper_width_percent_msg.data = 1.0
             
         self._gripper_width_publisher.publish(target_gripper_width_percent_msg)
