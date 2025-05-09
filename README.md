@@ -1,6 +1,6 @@
-# Franka Single Arm Controllers and SpaceMouse Publisher
+# Franka Spacemouse
 
-This repository contains ROS 2 packages for controlling a Franka robot arm using a 3Dconnexion SpaceMouse. It includes a `franka_single_arm_controllers` package for Joint Impedance control and a `spacemouse_publisher` package for publishing SpaceMouse input as ROS 2 messages.
+This repository contains ROS 2 packages for controlling a Franka FR3 arm with the Franka Hand using a 3Dconnexion SpaceMouse. 
 
 ## Packages
 
