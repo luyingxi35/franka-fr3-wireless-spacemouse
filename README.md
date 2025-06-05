@@ -35,6 +35,16 @@ This package provides a ROS 2 node for managing the gripper of the Franka robot.
 #### Launch Files:
 - **`franka_gripper_client.launch.py`**: Launches the gripper manager node.
 
+## VS-Code Dev-Container
+
+We recommend using the provided VS Code Dev Container for a consistent development environment with all dependencies pre-installed.
+
+To get started, open the project in VS Code so that the `.devcontainer` folder is part of the workspace. When prompted, select "Reopen in Container." If not prompted, open the Command Palette (`Ctrl+Shift+P`) and run "Dev Containers: Reopen in Container."
+
+The initial container build may take a few minutes. Once complete, you'll be inside a ready-to-use development environment. For more details, see the [VS-Code Dev-Containers documentation](https://code.visualstudio.com/docs/devcontainers/containers).
+
+If you choose not to use the Dev-Container, you will need to manually install the dependencies listed in the `Dockerfile` located in the `.devcontainer` folder.
+
 ## Build and Test
 
 ### Building the Project
