@@ -109,7 +109,8 @@ class GripperClient(Node):
 
 
   def _gripper_command_callback(self, msg: Float32) -> None:
-    new_open_width_percent = msg.data
+    new_open_width_percent = msg.data 
+    # new_open_width_percent = msg.target_gripper_width_percent_msg
     new_open_width = self._max_width * new_open_width_percent
     if self._gripper_command_transmitted and new_open_width != self._last_gripper_command:
       self._send_gripper_command(new_open_width)
